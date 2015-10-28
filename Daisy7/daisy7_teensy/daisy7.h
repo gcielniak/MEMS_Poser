@@ -3,19 +3,25 @@
 
 #include "Arduino.h"
 #include "i2c_t3.h"
-#include "Accelerator.h"
+#include "LIS331DLH.h"
+#include "L3G4200D.h"
+#include "HMC5883L.h"
 
 class Daisy7 {
 public:
-  Accelerator accelerator;
+  LIS331DLH accelerator;
+  L3G4200D gyroscope;
+  HMC5883L compass;
 
   Daisy7() {
     accelerator.SetDaisy(this);
+    gyroscope.SetDaisy(this);
     }
 
  void begin() {
     Wire.begin(I2C_MASTER, 0x00, I2C_PINS_16_17, I2C_PULLUP_EXT, I2C_RATE_400);
     accelerator.NormalMode();
+    gyroscope.NormalMode();
   }
 
   void write(byte address, byte reg, byte data) {

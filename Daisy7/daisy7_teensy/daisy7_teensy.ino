@@ -22,6 +22,15 @@ void loop() {
     Serial.println(daisy7.accelerator.Z());
     }
 
+  if (daisy7.gyroscope.available()) {
+    Serial.print("gyro: x=");
+    Serial.print(daisy7.gyroscope.X());
+    Serial.print(" y=");
+    Serial.print(daisy7.gyroscope.Y());
+    Serial.print(" z=");
+    Serial.println(daisy7.gyroscope.Z());
+    }
+
   if (Serial1.available()) {
     Serial.write(Serial1.read());
     }
