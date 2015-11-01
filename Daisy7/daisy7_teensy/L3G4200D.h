@@ -3,7 +3,11 @@
 
 #include "Arduino.h"
 
-enum class L3G4200DRegister {
+class Daisy7;
+  
+class L3G4200D {
+
+enum Register {
   WHO_AM_I = 0x0F,
   CTRL_REG1 = 0x20,
   CTRL_REG2 = 0x21,
@@ -21,9 +25,6 @@ enum class L3G4200DRegister {
   OUT_Z_H = 0x2D
   };
 
-class Daisy7;
-  
-class L3G4200D {
   Daisy7* daisy7;
   const byte address = 0x68;
   

@@ -31,6 +31,20 @@ void loop() {
     Serial.println(daisy7.gyroscope.Z());
     }
 
+  if (daisy7.compass.available()) {
+    Serial.print("compass: x=");
+    Serial.print(daisy7.compass.X());
+    Serial.print(" y=");
+    Serial.print(daisy7.compass.Y());
+    Serial.print(" z=");
+    Serial.println(daisy7.compass.Z());
+    }
+
+  Serial.print("barometer: temp=");
+  Serial.print(daisy7.barometer.Temperature());
+  Serial.print(" press=");
+  Serial.println(daisy7.barometer.Pressure());  
+
   if (Serial1.available()) {
     Serial.write(Serial1.read());
     }

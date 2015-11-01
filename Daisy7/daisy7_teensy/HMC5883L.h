@@ -3,7 +3,11 @@
 
 #include "Arduino.h"
 
-enum class HMC5883LRegister {
+class Daisy7;
+  
+class HMC5883L {
+
+enum Register {
   CONF_REG_A = 0x00,
   CONF_REG_B = 0x01,
   MODE_REG = 0x02,
@@ -19,9 +23,12 @@ enum class HMC5883LRegister {
   ID_REG_C = 0x0C
   };
 
-class Daisy7;
-  
-class HMC5883L {
+enum MeasurementMode {
+  MEASUREMENT_CONT = 0x00,
+  MEASUREMENT_SINGLE = 0x01,
+  MEASUREMENT_IDLE = 0x02
+  };
+
   Daisy7* daisy7;
   const byte address = 0x1E;
   
