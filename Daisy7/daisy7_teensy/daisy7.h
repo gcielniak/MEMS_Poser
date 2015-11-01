@@ -27,7 +27,7 @@ public:
     accelerator.NormalMode();
     gyroscope.NormalMode();
     compass.NormalMode();
-    barometer.NormalMode();
+    barometer.Mode(BMP085::STANDARD);
   }
 
   void write(byte address, byte reg, byte data) {
