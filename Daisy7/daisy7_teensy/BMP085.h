@@ -27,35 +27,6 @@ class BMP085 {
       };
 
   /**
-   * Register address.
-   */
-  enum Register {
-    CALIB_REG = 0xAA,
-    READTEMPCMD = 0x2E,
-    READPRESSURECMD = 0x34,
-    TEMPDATA = 0xF6,
-    PRESSUREDATA = 0xF6,
-    CONTROL = 0xF4  
-  };
-
-  /**
-   * Indicies for different calibration registers.
-   */
-  enum RegisterIndex {
-    I_AC1 = 0,
-    I_AC2 = 1,
-    I_AC3 = 2,
-    I_AC4 = 3,
-    I_AC5 = 4,
-    I_AC6 = 5,
-    I_B1 = 6,
-    I_B2 = 7,
-    I_MB = 8,
-    I_MC = 9,
-    I_MD = 10    
-    };
-
-  /**
    * Associate the main Daisy7 board.
    */
   void SetDaisy(Daisy7* daisy7) {
@@ -103,12 +74,42 @@ class BMP085 {
   float Altitude();
   
   protected:
+
   Daisy7* daisy7;
   const byte address = 0x77; //I2C address
   OversamplingSetting mode;
   short calib_registers[11]; //values of all calibration registers
   bool init = false;
   const float sealevel_pressure = 101325.0;
+
+  /**
+   * Register address.
+   */
+  enum Register {
+    CALIB_REG = 0xAA,
+    READTEMPCMD = 0x2E,
+    READPRESSURECMD = 0x34,
+    TEMPDATA = 0xF6,
+    PRESSUREDATA = 0xF6,
+    CONTROL = 0xF4  
+  };
+
+  /**
+   * Indicies for different calibration registers.
+   */
+  enum RegisterIndex {
+    I_AC1 = 0,
+    I_AC2 = 1,
+    I_AC3 = 2,
+    I_AC4 = 3,
+    I_AC5 = 4,
+    I_AC6 = 5,
+    I_B1 = 6,
+    I_B2 = 7,
+    I_MB = 8,
+    I_MC = 9,
+    I_MD = 10    
+    };
 
   /**
    * Helper function to calculate B5 parameter.

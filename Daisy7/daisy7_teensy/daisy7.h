@@ -26,7 +26,7 @@ public:
     Wire.begin(I2C_MASTER, 0x00, I2C_PINS_16_17, I2C_PULLUP_EXT, I2C_RATE_400);
     accelerator.NormalMode();
     gyroscope.NormalMode();
-    compass.NormalMode();
+    compass.SetOperatingMode(HMC5883L::MEASUREMENT_CONT);
     barometer.Mode(BMP085::STANDARD);
   }
 
