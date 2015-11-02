@@ -17,14 +17,14 @@ void BMP085::Mode(OversamplingSetting mode) {
     for (int i = 0; i < 11; i++) {
       high_byte = daisy7->read(address, CALIB_REG+i*2);
       low_byte = daisy7->read(address, CALIB_REG+i*2+1);
-      calib_registers[i] = (unsigned short)((high_byte<<8)|low_byte);
+      calib_registers[i] = (short)((high_byte<<8)|low_byte);
       } 
      init = true;
     }
   }
   
 int32_t BMP085::B5(uint32_t ut) {
-  int32_t x1 = (((int32_t)ut - (int32_t)calib_registers[I_AC6]) * (int32_t)calib_registers[I_AC5]) >> 15;
+  int32_t x1 = (((int32_t)ut - (int32_t)((uint16_t)calib_registers[I_AC6])) * (int32_t)((uint32_t)calib_registers[I_AC5])) >> 15;
   int32_t x2 = ((int32_t)calib_registers[I_MC] << 11) / (x1 + (int32_t)calib_registers[I_MD]);
   return (x1 + x2);
 }
@@ -44,7 +44,7 @@ int32_t BMP085::Temperature() {
 uint32_t BMP085::PressureRaw() {
   daisy7->write(address, CONTROL, READPRESSURECMD + (mode << 6));
 
-  delay(reading_time[mode]);
+  delay(2 + (3 << mode));
 
   byte high_byte = daisy7->read(address, PRESSUREDATA);
   byte low_byte = daisy7->read(address, PRESSUREDATA+1);
@@ -66,7 +66,7 @@ int32_t BMP085::Pressure() {
 
   x1 = ((int32_t)calib_registers[I_AC3] * b6) >> 13;
   x2 = ((int32_t)calib_registers[I_B1] * ((b6 * b6) >> 12)) >> 16;
-  b4 = ((uint32_t)calib_registers[I_AC4] * (uint32_t)((((x1 + x2) + 2) >> 2) + 32768)) >> 15;
+  b4 = ((uint32_t)((uint16_t)calib_registers[I_AC4]) * (uint32_t)((((x1 + x2) + 2) >> 2) + 32768)) >> 15;
   b7 = ((uint32_t)PressureRaw() - b3) * (uint32_t)( 50000UL >> mode);
 
   if (b7 < 0x80000000) {
@@ -83,3 +83,6 @@ int32_t BMP085::Pressure() {
   return p;
 }
 
+float BMP085::Altitude() {
+  return (44330.0 * (1.0 - pow((float)Pressure()/sealevel_pressure, 0.190284)));
+    }

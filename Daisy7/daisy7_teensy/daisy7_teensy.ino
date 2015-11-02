@@ -44,7 +44,9 @@ void loop() {
   Serial.print("barometer: temp=");
   Serial.print(daisy7.barometer.Temperature());
   Serial.print(" press=");
-  Serial.println(daisy7.barometer.Pressure());  
+  Serial.print(daisy7.barometer.Pressure());  
+  Serial.print(" altitude=");
+  Serial.println(daisy7.barometer.Altitude());  
 /*
   if (Serial1.available()) {
     Serial.write(Serial1.read());

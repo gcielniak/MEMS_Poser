@@ -97,13 +97,18 @@ class BMP085 {
    */
   int32_t Pressure();
 
+  /**
+   * Get altitude in meters.
+   */
+  float Altitude();
+  
   protected:
   Daisy7* daisy7;
   const byte address = 0x77; //I2C address
   OversamplingSetting mode;
   short calib_registers[11]; //values of all calibration registers
-  byte reading_time[4] = {5, 8, 14, 26}; //reading delay for different oversampling modes
   bool init = false;
+  const float sealevel_pressure = 101325.0;
 
   /**
    * Helper function to calculate B5 parameter.
