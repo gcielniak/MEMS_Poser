@@ -70,18 +70,27 @@ enum Gain {
 
   bool available();
 
-  short X();
+  short XRaw();
   
-  short Y();
+  short YRaw();
 
-  short Z();
+  short ZRaw();
 
+  float X();
+  
+  float Y();
+
+  float Z();
+
+  void SelfTest();
+  
 protected:
 
   Daisy7* daisy7;
   const byte address = 0x1E;
   const int gain_ratio[8] = {1370, 1090, 820, 660, 440, 390, 330, 230};
   byte conf_reg_a = 0b01110000;
+  byte gain = GA_1_3;
   
 enum Register {
   CONF_REG_A = 0x00,

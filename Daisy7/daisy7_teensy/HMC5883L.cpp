@@ -29,6 +29,7 @@ void HMC5883L::SetOperatingMode(OperatingMode mode) {
   }
 
 void HMC5883L::SetGain(Gain gain) {
+  this->gain = gain;
   daisy7->write(address, CONF_REG_B, gain<<5);  
   }
 
@@ -37,21 +38,89 @@ bool HMC5883L::available() {
    return ((data&0x03) == 1);
   }
 
-short HMC5883L::X() {
+short HMC5883L::XRaw() {
   byte low_byte = daisy7->read(address, OUT_X_L);
   byte high_byte = daisy7->read(address, OUT_X_H);
   return (short)((high_byte<<8)|low_byte);    
   }
 
-short HMC5883L::Y() {
+short HMC5883L::YRaw() {
   byte low_byte = daisy7->read(address, OUT_Y_L);
   byte high_byte = daisy7->read(address, OUT_Y_H);
   return (short)((high_byte<<8)|low_byte);    
   }
 
-short HMC5883L::Z() {
+short HMC5883L::ZRaw() {
   byte low_byte = daisy7->read(address, OUT_Z_L);
   byte high_byte = daisy7->read(address, OUT_Z_H);
   return (short)((high_byte<<8)|low_byte);    
+  }
+
+float HMC5883L::X() {
+  short raw_value = XRaw();
+  if (raw_value == -4096)
+    return NAN;
+  else
+    return ((float)raw_value)*100.0/gain_ratio[gain];
+  }
+
+float HMC5883L::Y() {
+  short raw_value = YRaw();
+  if (raw_value == -4096)
+    return NAN;
+  else
+    return ((float)raw_value)*100.0/gain_ratio[gain];
+  }
+
+float HMC5883L::Z() {
+  short raw_value = ZRaw();
+  if (raw_value == -4096)
+    return NAN;
+  else
+    return ((float)raw_value)*100.0/gain_ratio[gain];
+  }
+
+void HMC5883L::SelfTest() {
+  //no bias
+  SetOperatingMode(MEASUREMENT_IDLE);
+  SetMeasurementMode(NO_BIAS);
+  SetOperatingMode(MEASUREMENT_SINGLE);
+  delay(100);
+  Serial.println("No bias");
+  Serial.print("x=");
+  Serial.print(XRaw());
+  Serial.print(" y=");
+  Serial.print(YRaw());
+  Serial.print(" z=");
+  Serial.println(ZRaw());
+  
+  //positive bias
+  SetOperatingMode(MEASUREMENT_IDLE);
+  SetMeasurementMode(POS_BIAS);
+  SetOperatingMode(MEASUREMENT_SINGLE);
+  delay(100);
+  Serial.println("Positive bias");
+  Serial.print("x=");
+  Serial.print(XRaw());
+  Serial.print(" y=");
+  Serial.print(YRaw());
+  Serial.print(" z=");
+  Serial.println(ZRaw());
+  //negative bias
+  SetOperatingMode(MEASUREMENT_IDLE);
+  SetMeasurementMode(NEG_BIAS);
+  SetOperatingMode(MEASUREMENT_SINGLE);
+  delay(100);
+  Serial.println("Negative bias");
+  Serial.print("x=");
+  Serial.print(XRaw());
+  Serial.print(" y=");
+  Serial.print(YRaw());
+  Serial.print(" z=");
+  Serial.println(ZRaw());
+
+  //resume operation
+  SetMeasurementMode(NO_BIAS);
+  SetOperatingMode(MEASUREMENT_CONT);
   }
 
