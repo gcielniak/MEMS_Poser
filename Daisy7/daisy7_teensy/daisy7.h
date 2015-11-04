@@ -27,9 +27,7 @@ public:
     accelerator.NormalMode();
     gyroscope.NormalMode();
     compass.SelfTest();
-    compass.SetOperatingMode(HMC5883L::MEASUREMENT_CONT);
     barometer.Mode(BMP085::STANDARD);
-    delay(1000);
   }
 
   void write(byte address, byte reg, byte data) {

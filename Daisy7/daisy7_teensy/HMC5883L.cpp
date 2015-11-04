@@ -61,7 +61,7 @@ float HMC5883L::X() {
   if (raw_value == -4096)
     return NAN;
   else
-    return ((float)raw_value)*100.0/gain_ratio[gain];
+    return ((float)raw_value)*x_gain/gain_ratio[gain];
   }
 
 float HMC5883L::Y() {
@@ -69,7 +69,7 @@ float HMC5883L::Y() {
   if (raw_value == -4096)
     return NAN;
   else
-    return ((float)raw_value)*100.0/gain_ratio[gain];
+    return ((float)raw_value)*y_gain/gain_ratio[gain];
   }
 
 float HMC5883L::Z() {
@@ -77,7 +77,7 @@ float HMC5883L::Z() {
   if (raw_value == -4096)
     return NAN;
   else
-    return ((float)raw_value)*100.0/gain_ratio[gain];
+    return ((float)raw_value)*z_gain/gain_ratio[gain];
   }
 
 void HMC5883L::SelfTest() {
@@ -85,42 +85,33 @@ void HMC5883L::SelfTest() {
   SetOperatingMode(MEASUREMENT_IDLE);
   SetMeasurementMode(NO_BIAS);
   SetOperatingMode(MEASUREMENT_SINGLE);
-  delay(100);
-  Serial.println("No bias");
-  Serial.print("x=");
-  Serial.print(XRaw());
-  Serial.print(" y=");
-  Serial.print(YRaw());
-  Serial.print(" z=");
-  Serial.println(ZRaw());
+  delay(10);
   
   //positive bias
   SetOperatingMode(MEASUREMENT_IDLE);
   SetMeasurementMode(POS_BIAS);
   SetOperatingMode(MEASUREMENT_SINGLE);
-  delay(100);
-  Serial.println("Positive bias");
-  Serial.print("x=");
-  Serial.print(XRaw());
-  Serial.print(" y=");
-  Serial.print(YRaw());
-  Serial.print(" z=");
-  Serial.println(ZRaw());
+  delay(10);
+  short x_pos = XRaw();
+  short y_pos = YRaw();
+  short z_pos = ZRaw();
+  
   //negative bias
   SetOperatingMode(MEASUREMENT_IDLE);
   SetMeasurementMode(NEG_BIAS);
   SetOperatingMode(MEASUREMENT_SINGLE);
-  delay(100);
-  Serial.println("Negative bias");
-  Serial.print("x=");
-  Serial.print(XRaw());
-  Serial.print(" y=");
-  Serial.print(YRaw());
-  Serial.print(" z=");
-  Serial.println(ZRaw());
+  delay(10);
+  short x_neg = XRaw();
+  short y_neg = YRaw();
+  short z_neg = ZRaw();
+  
+  x_gain = 232./((float)(x_pos-x_neg)/gain_ratio[gain]);
+  y_gain = 232./((float)(y_pos-y_neg)/gain_ratio[gain]);
+  z_gain = 216./((float)(z_pos-z_neg)/gain_ratio[gain]);
 
   //resume operation
   SetMeasurementMode(NO_BIAS);
   SetOperatingMode(MEASUREMENT_CONT);
+  delay(10);
   }
 
