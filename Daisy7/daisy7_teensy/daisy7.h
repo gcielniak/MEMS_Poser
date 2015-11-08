@@ -25,7 +25,8 @@ public:
  void begin() {
     Wire.begin(I2C_MASTER, 0x00, I2C_PINS_16_17, I2C_PULLUP_EXT, I2C_RATE_400);
     accelerator.NormalMode();
-    gyroscope.NormalMode();
+    gyroscope.AllAxesOn();
+    gyroscope.SetDPS(L3G4200D::DPS_2000);
     compass.SelfTest();
     barometer.Mode(BMP085::STANDARD);
   }

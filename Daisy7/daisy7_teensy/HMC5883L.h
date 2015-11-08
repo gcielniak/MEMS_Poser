@@ -4,7 +4,13 @@
 #include "Arduino.h"
 
 class Daisy7;
-  
+
+/**
+ * HMC5883 3-axis compass by Honeywell.
+ * 
+ * https://www.adafruit.com/datasheets/HMC5883L_3-Axis_Digital_Compass_IC.pdf
+ * 
+ */
 class HMC5883L {
   public:
 
@@ -80,9 +86,9 @@ enum Gain {
   */
   byte read(byte reg);
 
-/**
- * Check if new data is available.
- */
+  /**
+   * Check if new data is available.
+   */
   bool available();
 
 /**

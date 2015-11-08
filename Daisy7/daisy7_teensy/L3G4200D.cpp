@@ -9,13 +9,36 @@ byte L3G4200D::read(byte reg) {
   return daisy7->read(address, reg);
 }
 
-void L3G4200D::NormalMode() {  
-  //Chip in Normal mode. Turn on all axis
-  daisy7->write(address, CTRL_REG1, 0x0F);
-  //Full 2000dps to control REG4
-  daisy7->write(address, CTRL_REG4, 0x20);
+void L3G4200D::AllAxesOn() {
+  byte data = daisy7->read(address, CTRL_REG1);
+  daisy7->write(address, CTRL_REG1, data|0xF);
   }
 
+void L3G4200D::SetBandwidth(Bandwidth value) {
+  byte data = daisy7->read(address, CTRL_REG1);
+  daisy7->write(address, CTRL_REG1, (data&0b11001111)|(value<<4));
+  }
+
+void L3G4200D::SetDataRate(DataRate value) {
+  byte data = daisy7->read(address, CTRL_REG1);
+  daisy7->write(address, CTRL_REG1, (data&0b00111111)|(value<<6));
+  }
+
+void L3G4200D::SetHMFMode(HPF_Mode value) {
+  byte data = daisy7->read(address, CTRL_REG2);
+  daisy7->write(address, CTRL_REG2, (data&0b11001111)|(value<<4));
+  }
+
+void L3G4200D::SetHPFCutoff(HPF_Cutoff value) {
+  byte data = daisy7->read(address, CTRL_REG2);
+  daisy7->write(address, CTRL_REG2, (data&0b11110000)|value);
+  }
+
+void L3G4200D::SetDPS(DPS value) {
+  byte data = daisy7->read(address, CTRL_REG4);
+  daisy7->write(address, CTRL_REG4, (data&0b11001111)|(value<<4));
+  }
+  
 bool L3G4200D::available() {
    byte data = daisy7->read(address, STATUS_REG);
    return ((data&0x08) != 0);
