@@ -2,6 +2,9 @@
 
 Daisy7 daisy7;
 
+char gps_line[82];
+int gps_slength = 0;
+
 void setup() {
 
   Serial.begin(115200);
@@ -13,7 +16,8 @@ void setup() {
 }
 
 void loop() {
-  /*
+
+  //Accelerator
   if (daisy7.accelerator.available()) {
     Serial.print("acc: x=");
     Serial.print(daisy7.accelerator.X());
@@ -22,8 +26,8 @@ void loop() {
     Serial.print(" z=");
     Serial.println(daisy7.accelerator.Z());
     }
-*/
 
+  //Gyroscope
   if (daisy7.gyroscope.available()) {
     Serial.print("gyro: x=");
     Serial.print(daisy7.gyroscope.X());
@@ -33,7 +37,6 @@ void loop() {
     Serial.println(daisy7.gyroscope.Z());
     }
 
-  /*
   //Compass
   if (daisy7.compass.available()) {
     Serial.print("compass: x=");
@@ -51,14 +54,16 @@ void loop() {
   Serial.print(daisy7.barometer.Pressure());  
   Serial.print(" altitude=");
   Serial.println(daisy7.barometer.Altitude());  
-  */
-  
-/*
+
+  //GPS
   if (Serial1.available()) {
-    Serial.write(Serial1.read());
+    daisy7.gps.update(Serial1.read());
+    
+    if (daisy7.gps.available()) {
+      char* gps_data = daisy7.gps.GetLine();
+      for (byte i = 0; i < daisy7.gps.GetLength(); i++)
+        Serial.write(gps_data[i]);
+      }
     }
-  if (Serial.available()) {
-    Serial1.write(Serial.read());
-    }*/
 }
 

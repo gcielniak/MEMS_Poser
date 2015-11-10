@@ -7,6 +7,7 @@
 #include "L3G4200D.h"
 #include "HMC5883L.h"
 #include "BMP085.h"
+#include "GPS.h"
 
 class Daisy7 {
 public:
@@ -14,6 +15,7 @@ public:
   L3G4200D gyroscope;
   HMC5883L compass;
   BMP085 barometer;
+  GPS gps;
 
   Daisy7() {
     accelerator.SetDaisy(this);
@@ -24,9 +26,11 @@ public:
 
  void begin() {
     Wire.begin(I2C_MASTER, 0x00, I2C_PINS_16_17, I2C_PULLUP_EXT, I2C_RATE_400);
-    accelerator.NormalMode();
-    gyroscope.AllAxesOn();
+    accelerator.SetPowerMode(LIS331DLH::POWER_NORMAL);
+    accelerator.SetDataRate(LIS331DLH::ODR_50_HZ);
+    accelerator.AllAxesOn();
     gyroscope.SetDPS(L3G4200D::DPS_2000);
+    gyroscope.AllAxesOn();
     compass.SelfTest();
     barometer.Mode(BMP085::STANDARD);
   }

@@ -9,8 +9,19 @@ byte LIS331DLH::read(byte reg) {
   return daisy7->read(address, reg);
 }
 
-void LIS331DLH::NormalMode() {
-  daisy7->write(address, CTRL_REG1, (POWER_NORMAL<<5)|(ODR_50_HZ<<3)|7);
+void LIS331DLH::AllAxesOn() {
+  byte data = daisy7->read(address, CTRL_REG1);
+  daisy7->write(address, CTRL_REG1, data|0b111);
+  }
+  
+void LIS331DLH::SetDataRate(DataRate value) {
+  byte data = daisy7->read(address, CTRL_REG1);
+  daisy7->write(address, CTRL_REG1, (data&0b11100111)|(value<<3));
+  }
+
+void LIS331DLH::SetPowerMode(PowerMode value) {
+  byte data = daisy7->read(address, CTRL_REG1);
+  daisy7->write(address, CTRL_REG1, (data&0b00011111)|(value<<5));
   }
 
 bool LIS331DLH::available() {
