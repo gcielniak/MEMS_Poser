@@ -34,6 +34,7 @@ void HMC5883L::SetGain(Gain gain) {
   }
 
 bool HMC5883L::available() {
+   reading_updated = false;
    byte data = daisy7->read(address, STATUS_REG);
    return ((data&0x03) == 1);
   }
@@ -58,6 +59,11 @@ short HMC5883L::ZRaw() {
 
 float HMC5883L::X() {
   short raw_value = XRaw();
+  
+  if (prev_reading[0] != raw_value)
+    reading_updated = true;
+  prev_reading[0] = raw_value;
+  
   if (raw_value == -4096)
     return NAN;
   else
@@ -66,6 +72,11 @@ float HMC5883L::X() {
 
 float HMC5883L::Y() {
   short raw_value = YRaw();
+
+  if (prev_reading[1] != raw_value)
+    reading_updated = true;
+  prev_reading[1] = raw_value;
+  
   if (raw_value == -4096)
     return NAN;
   else
@@ -74,6 +85,11 @@ float HMC5883L::Y() {
 
 float HMC5883L::Z() {
   short raw_value = ZRaw();
+
+  if (prev_reading[2] != raw_value)
+    reading_updated = true;
+  prev_reading[2] = raw_value;
+
   if (raw_value == -4096)
     return NAN;
   else

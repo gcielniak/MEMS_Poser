@@ -91,6 +91,8 @@ enum Gain {
    */
   bool available();
 
+  bool new_reading() { return reading_updated; };
+
 /**
  * Set sample mode.
  */
@@ -161,6 +163,9 @@ protected:
   float x_gain = 100.; //default gains
   float y_gain = 100.;
   float z_gain = 100.;
+  short prev_reading[3];
+
+  bool reading_updated;
 
   /**
    * Register addresses.
